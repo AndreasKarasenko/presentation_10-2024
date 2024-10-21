@@ -1,0 +1,1 @@
+# script for setting up ollama, see also scikit-ollama and ollama docs
