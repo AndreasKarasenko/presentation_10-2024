@@ -79,7 +79,7 @@ def save_results(metrics: dict, path: str, task: str):
         
 # utilities for rag.py
 import os
-from llama_index.core import StorageContext, VectorStoreIndex, load_index_from_storage
+from llama_index.core import StorageContext, VectorStoreIndex, load_index_from_storage, SummaryIndex
 from llama_index.core import Settings
 
 
@@ -91,5 +91,16 @@ def get_index(data, index_name):
         index.storage_context.persist(persist_dir=index_name)
     else:
         index = load_index_from_storage(StorageContext.from_defaults(persist_dir=index_name))
+    
+    return index
+
+
+def get_summary(data, index_name):
+    index = None
+    if not os.path.exists(index_name + "_summary"):
+        index = SummaryIndex.from_documents(documents=data, show_progress=True)
+        index.storage_context.persist(persist_dir=index_name + "_summary")
+    else:
+        index = load_index_from_storage(StorageContext.from_defaults(persist_dir=index_name + "_summary"))
     
     return index
