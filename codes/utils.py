@@ -84,6 +84,8 @@ from llama_index.core import Settings
 
 
 def get_index(data, index_name):
+    """Creates a simple VectorStoreIndex from the data.
+    If the index already exists, it loads the index from the storage context."""
     index = None
     if not os.path.exists(index_name):
         embed_model = Settings.embed_model
@@ -96,6 +98,8 @@ def get_index(data, index_name):
 
 
 def get_summary(data, index_name):
+    """Creates a SummaryIndex from the data.
+    If the index already exists, it loads the index from the storage context."""
     index = None
     if not os.path.exists(index_name + "_summary"):
         index = SummaryIndex.from_documents(documents=data, show_progress=True)

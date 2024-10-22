@@ -26,34 +26,44 @@ from llama_index.llms.ollama import Ollama
 from llama_index.embeddings.ollama import OllamaEmbedding
 from llama_index.core.agent import ReActAgent
 
+# set the LLM and embedding model in the settings
 Settings.llm = Ollama(model="gemma2:9b", request_timeout=60, temperature=0.0)
 Settings.embed_model = OllamaEmbedding(model_name="nomic-embed-text", ollama_additional_kwargs={"mirostat": 0})
 
 # standard indexing and retrieval setup
 pdf_path = os.path.join("data","sarstedt_2024.pdf")
-sarstedt = SimpleDirectoryReader(input_files=[pdf_path])
+sarstedt = SimpleDirectoryReader(input_files=[pdf_path]) # read the document from path
 pdf = sarstedt.load_data()
-index = get_index(pdf, "sarstedt")
-retriever = VectorIndexRetriever(index, similarity_top_k=5)
+index = get_index(pdf, "sarstedt") # index the document
+retriever = VectorIndexRetriever(index, similarity_top_k=5) # retrieve the top 5 most similar chunks
 response_synth = get_response_synthesizer(llm=Settings.llm)
 
+
+# create a query engine
+query_engine = RetrieverQueryEngine(
+    retriever=retriever,
+    )
+
+# create a more complex query engine with a postprocessor
 # query_engine = RetrieverQueryEngine(
 #     retriever=retriever,
 #     response_synthesizer=response_synth,
 #     node_postprocessors=[SimilarityPostprocessor(similarity_cutoff=0.7)]
 #     )
-query_engine = RetrieverQueryEngine(
-    retriever=retriever,
-    )
+
+# create a simple engine simply from the index
 # engine = index.as_query_engine()
 
 # summary setup
+# similarly create a summary index
 pdf_path = os.path.join("data","sarstedt_2024.pdf")
 sarstedt = SimpleDirectoryReader(input_files=[pdf_path])
 pdf = sarstedt.load_data()
 summary = get_summary(pdf, "sarstedt")
 summary_engine = summary.as_query_engine(response_mode="tree_summarize")
 
+# define tools that can be used by the LLM agent
+# each tool should have an engine and metadata describing the tool
 tools = [
     # QueryEngineTool(
     #     query_engine=query_engine,
@@ -70,12 +80,16 @@ tools = [
         )
     )
 ]
+
+# create an agent that consumes the tools
 context = """Purpose: The primary role of this agent is to provide acurate answers for the paper of Sarstedt et al. 2024.
 """
 agent = ReActAgent.from_tools(tools=tools, llm=Settings.llm, verbose=True, context=context)
 
+# create a while loop that keeps answering questions until the user quits
 while (prompt := input("Enter a prompt (q to quit): ")) != "q":
     response = agent.chat(prompt)
     print(response)
-    
+
+# example prompt:
 # provide me a list of 1. general 2. specifc and 3. application focused questions for this paper
