@@ -32,7 +32,7 @@ I recommend an Nvidia GPU and sufficient RAM / storage for datasets + models.
 
 ### Codes
 This repository offers 2 example tasks.
-1. Text classification ([Zero-Shot](./codes/zero_shot_clf.py) / [Few-Shot](./codes/few_shot_clf.py))
+1. Text classification ([Zero-Shot](./codes/zero_shot_clf.py) / [Few-Shot](./codes/few_shot_clf.py) / [Transformer](./codes/transformer.py))
 2. Retrieval Augmented Generation (e.g. [Paper Q&A](./codes/rag.py))
 
 It also contains [utilities](./codes/utils.py) for the individual tasks, as well as some data folder ([1](codes/data/), [2](codes/sarstedt/), [3](codes/sarstedt_summary/)). For task 1 it contains some exemplary [results](results/) that showcase the influence of the prompting strategy.

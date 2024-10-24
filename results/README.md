@@ -5,3 +5,4 @@ Comparing the individual results we can see the following trends:
 1. Using Scikit-ollama we can easily speed up inference using num_workers
 2. Using more guiding prompts generally leads to better results
 3. Few-Shot Learning leads to improvemnts, but only if the prompt is guided
+4. Fine-tuned models still offer competitive performance while requiring significantly fewer ressources and less tinkering

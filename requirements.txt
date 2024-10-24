@@ -3,3 +3,7 @@ datasets==3.0.1
 llama-index==0.11.19
 llama-index-embeddings-ollama==0.3.1
 llama-index-llms-ollama==0.3.4
+# only necessary if you want to also run transformer models
+# tensorflow[and-cuda]==2.17.0
+# transformers==4.46.0
+# tf-keras
